@@ -1,0 +1,93 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "Fin.ApplicationCore/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "compile": {
+          "bin/placeholder/Fin.ApplicationCore.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Fin.ApplicationCore.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Fin.ApplicationCore/1.0.0": {
+      "type": "project",
+      "path": "../Fin.ApplicationCore/Fin.ApplicationCore.csproj",
+      "msbuildProject": "../Fin.ApplicationCore/Fin.ApplicationCore.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.0": [
+      "Fin.ApplicationCore >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\ruchirap\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\My Codes\\MicroFin\\Repos\\micro-fin\\Micro.Fin\\Fin.Infrastructure\\Fin.Infrastructure.csproj",
+      "projectName": "Fin.Infrastructure",
+      "projectPath": "D:\\My Codes\\MicroFin\\Repos\\micro-fin\\Micro.Fin\\Fin.Infrastructure\\Fin.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\ruchirap\\.nuget\\packages\\",
+      "outputPath": "D:\\My Codes\\MicroFin\\Repos\\micro-fin\\Micro.Fin\\Fin.Infrastructure\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\ruchirap\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {},
+        "https://www.myget.org/F/jkells-public/api/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "projectReferences": {
+            "D:\\My Codes\\MicroFin\\Repos\\micro-fin\\Micro.Fin\\Fin.ApplicationCore\\Fin.ApplicationCore.csproj": {
+              "projectPath": "D:\\My Codes\\MicroFin\\Repos\\micro-fin\\Micro.Fin\\Fin.ApplicationCore\\Fin.ApplicationCore.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.0": {
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

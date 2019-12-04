@@ -1,0 +1,8 @@
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\bin\Debug\netcoreapp3.0\Fin.ApplicationCore.deps.json
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\bin\Debug\netcoreapp3.0\Fin.ApplicationCore.dll
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\bin\Debug\netcoreapp3.0\Fin.ApplicationCore.pdb
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\obj\Debug\netcoreapp3.0\Fin.ApplicationCore.csprojAssemblyReference.cache
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\obj\Debug\netcoreapp3.0\Fin.ApplicationCore.AssemblyInfoInputs.cache
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\obj\Debug\netcoreapp3.0\Fin.ApplicationCore.AssemblyInfo.cs
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\obj\Debug\netcoreapp3.0\Fin.ApplicationCore.dll
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.ApplicationCore\obj\Debug\netcoreapp3.0\Fin.ApplicationCore.pdb
