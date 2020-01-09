@@ -9,3 +9,5 @@ D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\obj\Debug\netc
 D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\obj\Debug\netcoreapp3.0\Fin.Infrastructure.csproj.CopyComplete
 D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\obj\Debug\netcoreapp3.0\Fin.Infrastructure.dll
 D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\obj\Debug\netcoreapp3.0\Fin.Infrastructure.pdb
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\bin\Debug\netcoreapp3.0\Fin.Infrastructure.runtimeconfig.json
+D:\My Codes\MicroFin\Repos\micro-fin\Micro.Fin\Fin.Infrastructure\bin\Debug\netcoreapp3.0\Fin.Infrastructure.runtimeconfig.dev.json
