@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fin.Infrastructure.Data
 {
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected DataContext _context;
 

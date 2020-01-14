@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fin.ApplicationCore.Interfaces.Repositories
 {
-    public interface IGenericRepository<T> where T : BaseEntity
+    public interface IGenericRepository<T> where T : class
     {
         T Add(T t);
         Task<T> AddAsyn(T t);
