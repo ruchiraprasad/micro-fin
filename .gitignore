@@ -7,3 +7,6 @@
 /Micro.Fin/Fin.Infrastructure/bin/Debug/netcoreapp3.0
 /Micro.Fin/Fin.Infrastructure/obj/Debug/netcoreapp3.0
 /Micro.Fin/Fin.Infrastructure/obj
+/Micro.Fin/Fin.Api/obj
+/Micro.Fin/Fin.ApplicationCore/bin/Debug/netcoreapp3.0
+/Micro.Fin/Fin.ApplicationCore/obj
