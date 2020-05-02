@@ -7,7 +7,11 @@ import { LoginComponent } from './user/login/login.component';
 import { UserComponent } from './user/user.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserService } from './user/user.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BaseApiService } from './shared/api-services/base-api-service';
+import { AuthInterceptor } from './shared/api-services/auth.interceptor';
+import { AuthGuard } from './shared/api-services/auth.guard';
+import { AuthService } from './shared/api-services/auth.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,12 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [UserService],
+  providers: [BaseApiService, UserService, AuthGuard, AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
