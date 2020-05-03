@@ -15,13 +15,21 @@ import { AuthService } from './shared/api-services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SplitterContainerComponent } from './shared/splitter/splitter-container/splitter-container.component';
+import { NavigationBarComponent } from './shared/navigation-bar/navigation-bar.component';
+import { LoanListComponent } from './home/loan-list/loan-list.component';
+import { LoanDetailComponent } from './home/loan-detail/loan-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     UserComponent,
-    HomeComponent
+    HomeComponent,
+    SplitterContainerComponent,
+    NavigationBarComponent,
+    LoanListComponent,
+    LoanDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +38,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     BrowserAnimationsModule,
     NgxNavbarModule
+  ],
+  entryComponents: [
+    LoanListComponent,
+    LoanDetailComponent
   ],
   providers: [BaseApiService, UserService, AuthGuard, AuthService,
     {
