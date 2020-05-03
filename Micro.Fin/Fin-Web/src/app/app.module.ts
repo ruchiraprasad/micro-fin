@@ -12,18 +12,24 @@ import { BaseApiService } from './shared/api-services/base-api-service';
 import { AuthInterceptor } from './shared/api-services/auth.interceptor';
 import { AuthGuard } from './shared/api-services/auth.guard';
 import { AuthService } from './shared/api-services/auth.service';
+import { HomeComponent } from './home/home.component';
+import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    UserComponent
+    UserComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    NgxNavbarModule
   ],
   providers: [BaseApiService, UserService, AuthGuard, AuthService,
     {
