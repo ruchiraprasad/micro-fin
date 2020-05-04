@@ -21,6 +21,10 @@ namespace Fin.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new CustomerConfig());
+            modelBuilder.ApplyConfiguration(new LoanConfig());
+            modelBuilder.ApplyConfiguration(new LoanDetailConfig());
+
             base.OnModelCreating(modelBuilder);
         }
 

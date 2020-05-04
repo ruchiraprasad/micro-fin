@@ -19,6 +19,7 @@ import { SplitterContainerComponent } from './shared/splitter/splitter-container
 import { NavigationBarComponent } from './shared/navigation-bar/navigation-bar.component';
 import { LoanListComponent } from './home/loan-list/loan-list.component';
 import { LoanDetailComponent } from './home/loan-detail/loan-detail.component';
+import { HomeService } from './home/home.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import { LoanDetailComponent } from './home/loan-detail/loan-detail.component';
     LoanListComponent,
     LoanDetailComponent
   ],
-  providers: [BaseApiService, UserService, AuthGuard, AuthService,
+  providers: [BaseApiService, UserService, AuthGuard, AuthService, HomeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

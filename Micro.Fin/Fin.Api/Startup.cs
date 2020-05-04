@@ -44,8 +44,13 @@ namespace Fin.Api
 
             services.AddControllers();
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<IUserService, UserService>(); 
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ILoanService, LoanService>();
+
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<ILoanRepository, LoanRepository>();
+            services.AddTransient<ILoanDetailRepository, LoanDetailRepository>();
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");

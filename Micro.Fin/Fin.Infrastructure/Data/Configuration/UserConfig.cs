@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace Fin.Infrastructure.Data.Configuration
 {
     public class UserConfig : IEntityTypeConfiguration<User>

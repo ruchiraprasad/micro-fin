@@ -4,14 +4,16 @@ using Fin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fin.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200504062600_CreateDB_02")]
+    partial class CreateDB_02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,10 +51,8 @@ namespace Fin.Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    b.Property<TimeSpan>("TimeSpan")
+                        .HasColumnType("time");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(50)")
@@ -104,10 +104,8 @@ namespace Fin.Infrastructure.Migrations
                     b.Property<string>("Security")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    b.Property<TimeSpan>("TimeSpan")
+                        .HasColumnType("time");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(50)")
@@ -161,10 +159,8 @@ namespace Fin.Infrastructure.Migrations
                     b.Property<DateTime>("PaidDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    b.Property<TimeSpan>("TimeSpan")
+                        .HasColumnType("time");
 
                     b.Property<decimal>("TotalInterest")
                         .HasColumnType("decimal(18,2)");
@@ -217,10 +213,8 @@ namespace Fin.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    b.Property<TimeSpan>("TimeSpan")
+                        .HasColumnType("time");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(50)")

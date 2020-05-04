@@ -6,10 +6,6 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { BaseApiService } from '@app/shared/api-services/base-api-service';
 import { Observable } from 'rxjs';
 
-const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
 @Injectable()
 export class UserService {
 
