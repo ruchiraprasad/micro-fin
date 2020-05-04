@@ -20,6 +20,8 @@ import { NavigationBarComponent } from './shared/navigation-bar/navigation-bar.c
 import { LoanListComponent } from './home/loan-list/loan-list.component';
 import { LoanDetailComponent } from './home/loan-detail/loan-detail.component';
 import { HomeService } from './home/home.service';
+import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import { LoanListItemComponent } from './home/loan-list/loan-list-item/loan-list-item.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { HomeService } from './home/home.service';
     SplitterContainerComponent,
     NavigationBarComponent,
     LoanListComponent,
-    LoanDetailComponent
+    LoanDetailComponent,
+    LoanListItemComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,8 @@ import { HomeService } from './home/home.service';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgxNavbarModule
+    NgxNavbarModule,
+    VirtualScrollerModule
   ],
   entryComponents: [
     LoanListComponent,

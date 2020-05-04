@@ -1,6 +1,21 @@
-<p>loan-list works!</p>
+<div class="container">
+    <div class="row">
+        <div></div>
+        <div class="grid-col">Customer</div>
+        <div class="grid-col">Initial Amount</div>
+        <div class="grid-col hidden-xs">Date Granted</div>
+        <div class="grid-col hidden-xs">Period(M)</div>
+        <div class="grid-col">Cap. Outstanding</div>
+    </div>
+    <div class="row">
+    <virtual-scroller #scroll [items]="buffer" (vsEnd)="fetchMore($event)" >
+        <app-loan-list-item *ngFor="let item of scroll.viewPortItems" [loanModel]="item">
+        </app-loan-list-item>
+        <div *ngIf="loading" class="loader" i18n="Treatment List Loading|Treatment List Loading Text@treatmentListLoadingText">Loading...</div>
+    </virtual-scroller> 
+</div>
+</div>
 
-<ul *ngFor="let loan of loans">
-    <li> {{ loan.customerName }} </li>
-    <li> {{ loan.initialLoanAmount }} </li>
-</ul>
+
+
+

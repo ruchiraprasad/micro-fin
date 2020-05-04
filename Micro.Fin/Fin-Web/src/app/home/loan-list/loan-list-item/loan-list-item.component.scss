@@ -1,0 +1,24 @@
+app-loan-list-item {
+    display: block;
+    width: 100%;
+    height: 30px;
+  }
+
+  .box:hover{
+    background:rgb(176, 205, 216); /* make this whatever you want */
+    cursor: pointer;
+    }
+
+    .grid-col{
+        min-width: 100px;
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+      /* Breakpoint SM */
+@media (min-width: 320px) and (max-width: 425px)
+{
+    .hidden-xs
+    {
+        display: none !important;
+    } 
+}
