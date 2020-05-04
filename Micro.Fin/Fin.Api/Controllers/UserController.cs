@@ -34,33 +34,32 @@ namespace Fin.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(LoginModel loginModel)
+        public async Task<IActionResult> Authenticate(LoginModel loginModel)
         {
             if (loginModel == null)
             {
                 return BadRequest("Invalid client request");
             }
 
-            if (loginModel.UserName == "ruchira" && loginModel.Password == "123")
-            {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-                var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:5000",
-                    audience: "http://localhost:5000",
-                    claims: new List<Claim>() { new Claim(JwtRegisteredClaimNames.GivenName, loginModel.UserName) },
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: signinCredentials
-                );
-
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = tokenString });
-            }
-            else
+            var user = await _userService.Authenticate(loginModel.UserName, loginModel.Password);
+            if (user == null)
             {
                 return Unauthorized();
             }
+
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            var tokeOptions = new JwtSecurityToken(
+                issuer: "http://localhost:5000",
+                audience: "http://localhost:5000",
+                claims: new List<Claim>() { new Claim(JwtRegisteredClaimNames.GivenName, loginModel.UserName) },
+                expires: DateTime.Now.AddMinutes(5),
+                signingCredentials: signinCredentials
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            return Ok(new { Token = tokenString });
         }
 
         // GET: api/User
