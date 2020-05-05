@@ -47,6 +47,14 @@ namespace Fin.Api.Controllers
             return null;
         }
 
+        // GET: api/Loan/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Get(int id)
+        {
+            var loan = await this._loanRepository.FindAsync(x => x.Id == id);
+            return Ok(loan);
+        }
+
         [HttpGet("loan-details/{loanId}")]
         public async Task<ActionResult> GetLoanDetails(int loanId)
         {

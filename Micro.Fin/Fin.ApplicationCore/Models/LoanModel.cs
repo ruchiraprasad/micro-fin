@@ -6,6 +6,7 @@ namespace Fin.ApplicationCore.Models
 {
     public class LoanModel
     {
+        public int Id { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public decimal InitialLoanAmount { get; set; }

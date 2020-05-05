@@ -6,6 +6,7 @@ import { HomeService } from '../home.service';
 import { takeUntil, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { LoanModel } from '../home.model';
 
 @Component({
   selector: 'app-loan-detail',
@@ -20,17 +21,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   loanDetails: any[] = [];
   clonedLoanDetails: { [s: string]: any; } = {};
   
-  cars2: Car[];
   brands: SelectItem[];
   clonedCars: { [s: string]: Car; } = {};
-
-  cities = [
-    {id: 1, name: 'Vilnius'},
-    {id: 2, name: 'Kaunas'},
-    {id: 3, name: 'Pavilnys', disabled: true},
-    {id: 4, name: 'Pabradė'},
-    {id: 5, name: 'Klaipėda'}
-];
 
   bsConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD.MM.YYYY', containerClass: 'theme-dark-blue datepicker-position',
@@ -43,7 +35,25 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getCustomers();
-    this.cars2 = this.getCarsSmall();
+
+    this.homeService.getSelectedLoanAsObservable()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(loanId => {
+      if(loanId){
+        this.homeService.getLoan(loanId)
+        .pipe(
+          switchMap(loan => {
+            console.log('Saved data', loan);
+            this.setLoanDetailFormValues(loan);
+            return this.homeService.getLoanDetails(loan.id);
+          }))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(data => {
+          console.log('lonaDetails', data);
+          this.loanDetails = data;
+        });
+      }
+    });
 
     this.brands = [
       { label: 'Audi', value: 'Audi' },
@@ -72,6 +82,20 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  setLoanDetailFormValues(loan: any){
+    this.loanFormGroup.setValue({
+      id: loan.id,
+      customerId: loan.customerId,
+      initialLoanAmount: loan.initialLoanAmount,
+      dateGranted: new Date(loan.dateGranted),
+      periodMonths: loan.periodMonths,
+      interest: loan.interest,
+      security: loan.security,
+      propertyValue: loan.propertyValue,
+      capitalOutstanding: loan.capitalOutstanding
+    })
+  }
+
   onDateChange(date: Date) {
     
   }
@@ -82,6 +106,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
       const formValues = Object.assign({}, this.loanFormGroup.value);
       formValues.id = null;
       formValues.dateGranted = new Date(formValues.dateGranted);
+      formValues.capitalOutstanding = formValues.initialLoanAmount;
       console.log('loanFormGroup', formValues);
       this.homeService.createLoan(formValues)
       .pipe(

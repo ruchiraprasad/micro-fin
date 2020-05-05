@@ -3,6 +3,7 @@ export class HomeModel {
 }
 
 export class LoanModel {
+    id: number;
     customerId: number;
     customerName: string;
     initialLoanAmount: number;

@@ -24,6 +24,7 @@ namespace Fin.Infrastructure.Data
             var basedQuery = this.GetAll();
             var loans = basedQuery.Select(loan => new LoanModel()
             {
+                Id = loan.Id,
                 CustomerId = loan.CustomerId,
                 CustomerName = loan.Customer != null ? loan.Customer.Name : string.Empty,
                 InitialLoanAmount = loan.InitialLoanAmount,
