@@ -22,6 +22,18 @@ import { LoanDetailComponent } from './home/loan-detail/loan-detail.component';
 import { HomeService } from './home/home.service';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { LoanListItemComponent } from './home/loan-list/loan-list-item/loan-list-item.component';
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { InputMaskModule } from 'primeng/inputmask';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { AddRowDirective } from './shared/directives/add-row.directive';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import { MessageService } from 'primeng/api';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BsDatepickerModule, BsDropdownModule, TypeaheadModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -33,7 +45,8 @@ import { LoanListItemComponent } from './home/loan-list/loan-list-item/loan-list
     NavigationBarComponent,
     LoanListComponent,
     LoanDetailComponent,
-    LoanListItemComponent
+    LoanListItemComponent,
+    AddRowDirective
   ],
   imports: [
     BrowserModule,
@@ -42,13 +55,25 @@ import { LoanListItemComponent } from './home/loan-list/loan-list-item/loan-list
     HttpClientModule,
     BrowserAnimationsModule,
     NgxNavbarModule,
-    VirtualScrollerModule
+    VirtualScrollerModule,
+    TableModule,
+    DropdownModule,
+    CalendarModule,
+    InputMaskModule,
+    ButtonModule,
+    MessagesModule,
+    MessageModule,
+    FormsModule,
+    NgSelectModule,
+    BsDatepickerModule.forRoot(), 
+    BsDropdownModule.forRoot(),
+    TypeaheadModule.forRoot()
   ],
   entryComponents: [
     LoanListComponent,
     LoanDetailComponent
   ],
-  providers: [BaseApiService, UserService, AuthGuard, AuthService, HomeService,
+  providers: [BaseApiService, UserService, AuthGuard, AuthService, HomeService, MessageService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

@@ -9,5 +9,6 @@ namespace Fin.ApplicationCore.Interfaces.Services
     public interface ILoanService
     {
         Task<List<LoanModel>> FindLoans(int skip, int take, string searchText);
+        Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel);
     }
 }

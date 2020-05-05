@@ -54,7 +54,7 @@ namespace Fin.Api.Controllers
                 issuer: "http://localhost:5000",
                 audience: "http://localhost:5000",
                 claims: new List<Claim>() { new Claim(JwtRegisteredClaimNames.GivenName, loginModel.UserName) },
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: signinCredentials
             );
 

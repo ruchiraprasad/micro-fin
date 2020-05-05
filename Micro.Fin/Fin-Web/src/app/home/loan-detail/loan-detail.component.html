@@ -1,1 +1,155 @@
-<p>loan-detail works!</p>
+<div class="container">
+    <div class="">
+        <div class="justify-content-center">
+            <div class="">
+                <div class="card-header">
+                    <h3>Loan Details</h3>
+                </div>
+                <div class="">
+                    <form [formGroup]="loanFormGroup" (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Customer</label>
+                                <ng-select [items]="customers" bindValue="id" bindLabel="displayText"
+                                    placeholder="Select a Customer" formControlName="customerId" [selectOnTab]="true">
+                                    <!-- <ng-template ng-option-tmp let-item="item">
+                                                                                            <div title="{{item.name}}">{{item.name}} - {{item.phone}}</div>
+                                                                                        </ng-template> -->
+                                </ng-select>
+                            </div>
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Interest</label>
+                                <span class="form-control">
+                                    <input type="number" style="text-align:left;width: 90%;border: 0;" max="100"
+                                        accuracy="2" min="1" formControlName="interest" name="interest">%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Initial Loan Amount</label>
+                                <input type="number" class="form-control" style="text-align:left;"
+                                    formControlName="initialLoanAmount" name="initialLoanAmount">
+                            </div>
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Date Granted</label>
+                                <input class="form-control" type="text" autocomplete="false" #dp="bsDatepicker"
+                                    bsDatepicker triggers="click:click" [bsConfig]="bsConfig"
+                                    (bsValueChange)="onDateChange($event)" formControlName="dateGranted"
+                                    placeholder="DD.MM.YYYY" dateOnly [maxDate]="maxDate" />
+                                <!-- <div class="input-group-append" (click)="dp.toggle()" [attr.aria-expanded]="dp.isOpen">
+                                                                                    <span class="input-group-text">
+                                                                                        <i class="material-icons">today</i>
+                                                                                    </span>
+                                                                                    </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Period (M)</label>
+                                <input type="number" class="form-control" style="text-align:left;"
+                                    formControlName="periodMonths" name="periodMonths">
+                            </div>
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Capital Outstanding</label>
+                                <input type="number" class="form-control" style="text-align:left;"
+                                    formControlName="capitalOutstanding" name="capitalOutstanding">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Security</label>
+                                <textarea rows="2" class="form-control" style="text-align:left;"
+                                    formControlName="security" name="security"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn float-right login_btn">
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <h3>Schedule</h3>
+                    <p-table #dt [value]="loanDetails" dataKey="id" editMode="row">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Installment</th>
+                                <th>Month</th>
+                                <th>Monthly Interest</th>
+                                <th>Paid</th>
+                                <th>Late Paid</th>
+                                <th>Date Paid</th>
+                                <th>Balance</th>
+                                <th style="width:8em"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="rowData">
+                                <td>
+                                    <!-- {{rowData.vin}} -->
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="rowData.installment" required>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.installment}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="rowData.month" required>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.month | date:'MMM d, y'}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="brands" [(ngModel)]="rowData.monthlyInterest"
+                                                [style]="{'width':'100%'}"></p-dropdown>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.monthlyInterest}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="rowData.paid">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.paid}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="text-align:center">
+                                    <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"
+                                        class="ui-button-info" (click)="onRowEditInit(rowData)"></button>
+                                    <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check"
+                                        class="ui-button-success" style="margin-right: .5em"
+                                        (click)="onRowEditSave(rowData)"></button>
+                                    <button *ngIf="editing" pButton type="button" pCancelEditableRow icon="pi pi-times"
+                                        class="ui-button-danger" (click)="onRowEditCancel(rowData, ri)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<br />
+<button pButton type="button" icon="pi pi-plus" class="ui-button-info" [label]="'Add'" pAddRow [table]="dt"
+    [newRow]="newRow()"></button>
+
+<p-messages [(value)]="msgs"></p-messages>

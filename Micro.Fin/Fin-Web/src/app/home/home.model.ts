@@ -10,3 +10,14 @@ export class LoanModel {
     periodMonths: number;
     capitalOutstanding: number;
 }
+
+export class CreateLoanModel{
+    customerId: number;
+    initialLoanAmount: number;
+    dateGranted: Date;
+    periodMonths: number;
+    interest: number;
+    security: string;
+    propertyValue: number;
+    capitalOutstanding: number;
+}
