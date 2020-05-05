@@ -9,6 +9,7 @@ namespace Fin.ApplicationCore.Entities
     {
         public int LoanId { get; set; }
         public virtual Loan Loan { get; set; }
+        public int Installment { get; set; }
         public DateTime Month { get; set; }
         public decimal MonthlyInterest { get; set; }
         public decimal Paid { get; set; }
