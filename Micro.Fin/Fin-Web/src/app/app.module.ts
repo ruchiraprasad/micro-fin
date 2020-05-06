@@ -32,8 +32,11 @@ import { AddRowDirective } from './shared/directives/add-row.directive';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule, BsDropdownModule, TypeaheadModule } from 'ngx-bootstrap';
+import { CustomerComponent } from './customer/customer.component';
+import { CustomerService } from './customer/customer.service';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import { BsDatepickerModule, BsDropdownModule, TypeaheadModule } from 'ngx-boots
     LoanListComponent,
     LoanDetailComponent,
     LoanListItemComponent,
-    AddRowDirective
+    AddRowDirective,
+    CustomerComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,13 +71,14 @@ import { BsDatepickerModule, BsDropdownModule, TypeaheadModule } from 'ngx-boots
     NgSelectModule,
     BsDatepickerModule.forRoot(), 
     BsDropdownModule.forRoot(),
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    DialogModule
   ],
   entryComponents: [
     LoanListComponent,
     LoanDetailComponent
   ],
-  providers: [BaseApiService, UserService, AuthGuard, AuthService, HomeService, MessageService,
+  providers: [BaseApiService, UserService, AuthGuard, AuthService, HomeService, MessageService, CustomerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

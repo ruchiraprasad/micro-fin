@@ -46,6 +46,7 @@ namespace Fin.Api
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILoanService, LoanService>();
+            services.AddTransient<ICustomerService, CustomerService>();
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();

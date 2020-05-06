@@ -32,7 +32,7 @@ export class HomeService {
     }
 
     getCustomers(): Observable<any> {
-        return this.baseApiService.get<LoanModel>(`api/customer`);
+        return this.baseApiService.get<any>(`api/customer`);
     }
 
     createLoan(createLoanModel: CreateLoanModel): Observable<any> {

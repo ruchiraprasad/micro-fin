@@ -1,0 +1,74 @@
+<div class="container">
+    <div class="justify-content-center">
+        <p-table [columns]="cols" [value]="customers" selectionMode="single" [(selection)]="selectedCustomer" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+            <ng-template pTemplate="caption">
+                Customers
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary" let-rowData>
+                <div style="text-align:left">
+                    <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+                </div>
+            </ng-template>    
+        </p-table>        
+    </div>
+</div>
+
+
+
+<p-dialog header="Customer Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '300px'}">
+    <div class="ui-g ui-fluid" *ngIf="customer">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="name" [(ngModel)]="customer.name" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="phone">Phone</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="phone" [(ngModel)]="customer.phone" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="address">Address</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="address" [(ngModel)]="customer.address" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="comment">Comment</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="comment" [(ngModel)]="customer.comment" />
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <!-- <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Delete"></button> -->
+            <button type="button" pButton icon="fa fa-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>
