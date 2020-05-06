@@ -68,62 +68,69 @@
                         </div>
                     </form>
                 </div>
-                <div class="card-footer">
+                <div class="">
                     <h3>Schedule</h3>
                     <p-table #dt [value]="loanDetails" dataKey="id" editMode="row">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th>Installment</th>
+                                <th style="width:2em">#</th>
                                 <th>Month</th>
-                                <th>Monthly Interest</th>
+                                <th>Interest</th>
                                 <th>Paid</th>
                                 <th>Late Paid</th>
                                 <th>Date Paid</th>
                                 <th>Balance</th>
-                                <th style="width:8em"></th>
+                                <th style="width:4em"></th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
                             <tr [pEditableRow]="rowData">
                                 <td>
-                                    <!-- {{rowData.vin}} -->
-                                    <p-cellEditor>
-                                        <ng-template pTemplate="input">
-                                            <input pInputText type="text" [(ngModel)]="rowData.installment" required>
-                                        </ng-template>
-                                        <ng-template pTemplate="output">
-                                            {{rowData.installment}}
-                                        </ng-template>
-                                    </p-cellEditor>
+                                    {{rowData.installment}}
+                                </td>
+                                <td>
+                                    {{rowData.month | date:'MMM d, y'}}
+                                </td>
+                                <td>
+                                    {{rowData.monthlyInterest}}
                                 </td>
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="text" [(ngModel)]="rowData.month" required>
-                                        </ng-template>
-                                        <ng-template pTemplate="output">
-                                            {{rowData.month | date:'MMM d, y'}}
-                                        </ng-template>
-                                    </p-cellEditor>
-                                </td>
-                                <td>
-                                    <p-cellEditor>
-                                        <ng-template pTemplate="input">
-                                            <p-dropdown [options]="brands" [(ngModel)]="rowData.monthlyInterest"
-                                                [style]="{'width':'100%'}"></p-dropdown>
-                                        </ng-template>
-                                        <ng-template pTemplate="output">
-                                            {{rowData.monthlyInterest}}
-                                        </ng-template>
-                                    </p-cellEditor>
-                                </td>
-                                <td>
-                                    <p-cellEditor>
-                                        <ng-template pTemplate="input">
-                                            <input pInputText type="text" [(ngModel)]="rowData.paid">
+                                            <input pInputText type="text" [(ngModel)]="rowData.paid" style="width: 100%;">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.paid}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="rowData.latePaid" style="width: 100%;">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.latePaid}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input style="width: 100%;" type="text" autocomplete="false" #dp2="bsDatepicker"
+                                                bsDatepicker triggers="click:click" [bsConfig]="bsConfig"
+                                                [(ngModel)]="rowData.datePaid"
+                                                placeholder="DD.MM.YYYY" dateOnly [maxDate]="maxDate" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.datePaid | date:'MMM d, y'}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.balance}}
                                         </ng-template>
                                     </p-cellEditor>
                                 </td>

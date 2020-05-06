@@ -54,18 +54,6 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
         });
       }
     });
-
-    this.brands = [
-      { label: 'Audi', value: 'Audi' },
-      { label: 'BMW', value: 'BMW' },
-      { label: 'Fiat', value: 'Fiat' },
-      { label: 'Ford', value: 'Ford' }
-    ];
-
-    setTimeout(function () {
-      console.log('hide');
-      this.msgss = [];
-    }, 2000);
   }
 
   createLoanDetailForm() {
@@ -146,16 +134,6 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
   newRow() {
     return { brand: '', color: '', vin: '', year: '' };
-  }
-
-  getCarsSmall() {
-    return [
-      { "brand": "VW", "year": 2012, "color": "Orange", "vin": "dsad231ff" },
-      { "brand": "Audi", "year": 2011, "color": "Black", "vin": "gwregre345" },
-      { "brand": "Renault", "year": 2005, "color": "Gray", "vin": "h354htr" },
-      { "brand": "BMW", "year": 2003, "color": "Blue", "vin": "j6w54qgh" },
-
-    ]
   }
 
   private getCustomers(){

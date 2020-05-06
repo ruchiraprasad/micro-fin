@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fin.ApplicationCore.Entities
+namespace Fin.ApplicationCore.Models
 {
-    public class LoanDetail : BaseEntity
+    public class LoanDetailModel
     {
+        public int Id { get; set; }
         public int LoanId { get; set; }
-        public virtual Loan Loan { get; set; }
         public int Installment { get; set; }
         public DateTime Month { get; set; }
         public decimal MonthlyInterest { get; set; }

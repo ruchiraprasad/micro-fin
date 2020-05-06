@@ -21,19 +21,6 @@ namespace Fin.ApplicationCore.Services
         public async Task<List<LoanModel>> FindLoans(int skip, int take, string searchText)
         {
             return await this._loanRepository.FindLoans(skip, take, searchText);
-            //var basedQuery = Enumerable.Empty<LoanModel>().AsQueryable();
-
-            //var basedQuery = this._loanRepository.GetAll().AsQueryable();
-            //var loans = basedQuery.Select(loan => new LoanModel()
-            //{
-            //    CustomerId = loan.CustomerId,
-            //    CustomerName = loan.Customer != null ? loan.Customer.Name : string.Empty,
-            //    InitialLoanAmount = loan.InitialLoanAmount,
-            //    DateGranted = loan.DateGranted,
-            //    PeriodMonths = loan.PeriodMonths,
-            //    CapitalOutstanding = loan.CapitalOutstanding
-            //});
-
             //return await Task.Run(() => loans.OrderBy(x => x.CustomerId).Skip(skip).Take(take).ToList());
         }
 
@@ -51,9 +38,7 @@ namespace Fin.ApplicationCore.Services
                 CapitalOutstanding = loanCreateModel.CapitalOutstanding,
 
                 CreatedBy = "ruchira",
-                CreatedOn = DateTime.Now,
-                UpdatedBy = "ruchira",
-                UpdatedOn = DateTime.Now
+                CreatedOn = DateTime.Now
             };
 
             // Add Loan Details..
@@ -67,12 +52,11 @@ namespace Fin.ApplicationCore.Services
                     Installment = i,
                     Month = loanCreateModel.DateGranted.AddMonths(i - 1),
                     MonthlyInterest = loanCreateModel.CapitalOutstanding * loanCreateModel.Interest / 100,
-                    Paid = 0,
-                    LatePaid = 0,
                     PaidDate = loanCreateModel.DateGranted.AddMonths(i - 1),
-                    TotalInterest = totalInterest,
                     Balance = loanCreateModel.CapitalOutstanding + totalInterest,
-                    InterestType = InterestType.SimpleInterest
+                    InterestType = InterestType.SimpleInterest,
+                    CreatedBy = "ruchira",
+                    CreatedOn = DateTime.Now
                 };
 
                 loan.LoanDetails.Add(loanDetail);
