@@ -10,5 +10,7 @@ namespace Fin.ApplicationCore.Interfaces.Services
     {
         Task<List<LoanModel>> FindLoans(int skip, int take, string searchText);
         Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel);
+        Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel);
+        Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel);
     }
 }

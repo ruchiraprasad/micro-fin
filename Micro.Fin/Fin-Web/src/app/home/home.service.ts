@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from '@app/shared/api-services/base-api-service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { LoanModel, CreateLoanModel } from './home.model';
+import { LoanModel, CreateLoanModel, LoanDetailModel } from './home.model';
 
 @Injectable()
 export class HomeService {
@@ -45,5 +45,13 @@ export class HomeService {
 
     getLoanDetails(loanId: number) : Observable<any> {
         return this.baseApiService.get<any>(`api/loan/loan-details/${loanId}`);
+    }
+
+    updateLoanDetail(loanDetailModel: LoanDetailModel): Observable<any> {
+        return this.baseApiService.put(`api/loan/loan-detail`, loanDetailModel);
+    }
+
+    createLoanDetail(loanDetailModel: LoanDetailModel): Observable<any> {
+        return this.baseApiService.post(`api/loan/loan-detail`, loanDetailModel);
     }
 }

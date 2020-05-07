@@ -22,3 +22,22 @@ export class CreateLoanModel{
     propertyValue: number;
     capitalOutstanding: number;
 }
+
+export class LoanDetailModel{
+    id?: number;
+    loanId: number;
+    installment?: number;
+    month?: Date;
+    monthlyInterest?: number
+    paid?: number
+    latePaid?: number
+    paidDate?: Date;
+    capitalPaid?: number;
+    balance?: number;
+    interestType?: InterestType;
+}
+
+export enum InterestType{
+    SimpleInterest = 0,
+    CompoundInterest = 1
+}

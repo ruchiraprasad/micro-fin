@@ -6,7 +6,7 @@ import { HomeService } from '../home.service';
 import { takeUntil, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
-import { LoanModel } from '../home.model';
+import { LoanModel, LoanDetailModel } from '../home.model';
 
 @Component({
   selector: 'app-loan-detail',
@@ -40,6 +40,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroy$))
     .subscribe(loanId => {
       if(loanId){
+        console.log('getSelectedLoanAsObservable');
         this.homeService.getLoan(loanId)
         .pipe(
           switchMap(loan => {
@@ -115,10 +116,21 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     this.clonedLoanDetails[loanDetail.id] = { ...loanDetail };
   }
 
-  onRowEditSave(loanDetail: any) {
-    if (loanDetail.id > 0) {
-      delete this.clonedLoanDetails[loanDetail.id];
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Car is updated', life: 2 });
+  onRowEditSave(loanDetail: LoanDetailModel) {
+    if (loanDetail.id > 0 && loanDetail.paidDate) {
+      loanDetail.paidDate = new Date(loanDetail.paidDate);
+      this.homeService.updateLoanDetail(loanDetail)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data : LoanDetailModel) => {
+        console.log('onRowEditSave', loanDetail);
+        //loanDetail.balance = data.balance;
+        this.homeService.getLoanDetails(loanDetail.loanId).subscribe(dd => {
+          this.loanDetails = dd;
+        })
+        delete this.clonedLoanDetails[loanDetail.id];
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Car is updated', life: 2 });
+      });
+      
     }
     else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Year is required' });
@@ -133,7 +145,16 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   }
 
   newRow() {
-    return { brand: '', color: '', vin: '', year: '' };
+    console.log('newRow');
+    
+    const loanDetailModel = new LoanDetailModel();
+    loanDetailModel.loanId = this.loanFormGroup.value.id;
+    this.homeService.createLoanDetail(loanDetailModel)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data : LoanDetailModel) => {
+      this.loanDetails.push(data);
+    });
+    
   }
 
   private getCustomers(){

@@ -2,7 +2,7 @@
     <div class="">
         <div class="justify-content-center">
             <div class="">
-                <div class="card-header">
+                <div class="">
                     <h3>Loan Details</h3>
                 </div>
                 <div class="">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="">
                     <h3>Schedule</h3>
-                    <p-table #dt [value]="loanDetails" dataKey="id" editMode="row">
+                    <p-table #dt2222 [value]="loanDetails" dataKey="id" editMode="row">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width:2em">#</th>
@@ -78,7 +78,8 @@
                                 <th>Interest</th>
                                 <th>Paid</th>
                                 <th>Late Paid</th>
-                                <th>Date Paid</th>
+                                <th>Paid Date</th>
+                                <th>Capital Paid</th>
                                 <th>Balance</th>
                                 <th style="width:4em"></th>
                             </tr>
@@ -97,7 +98,7 @@
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="text" [(ngModel)]="rowData.paid" style="width: 100%;">
+                                            <input pInputText type="number" [(ngModel)]="rowData.paid" style="width: 100%;">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.paid}}
@@ -107,7 +108,7 @@
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="text" [(ngModel)]="rowData.latePaid" style="width: 100%;">
+                                            <input pInputText type="number" [(ngModel)]="rowData.latePaid" style="width: 100%;">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.latePaid}}
@@ -119,11 +120,21 @@
                                         <ng-template pTemplate="input">
                                             <input style="width: 100%;" type="text" autocomplete="false" #dp2="bsDatepicker"
                                                 bsDatepicker triggers="click:click" [bsConfig]="bsConfig"
-                                                [(ngModel)]="rowData.datePaid"
-                                                placeholder="DD.MM.YYYY" dateOnly [maxDate]="maxDate" />
+                                                [(ngModel)]="rowData.paidDate"
+                                                placeholder="DD.MM.YYYY" dateOnly [maxDate]="maxDate" required/>
                                         </ng-template>
                                         <ng-template pTemplate="output">
-                                            {{rowData.datePaid | date:'MMM d, y'}}
+                                            {{rowData.paidDate | date:'MMM d, y'}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" [(ngModel)]="rowData.capitalPaid" style="width: 100%;">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.capitalPaid}}
                                         </ng-template>
                                     </p-cellEditor>
                                 </td>
@@ -135,7 +146,7 @@
                                     </p-cellEditor>
                                 </td>
                                 <td style="text-align:center">
-                                    <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"
+                                    <button *ngIf="!editing && rowData.editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"
                                         class="ui-button-info" (click)="onRowEditInit(rowData)"></button>
                                     <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check"
                                         class="ui-button-success" style="margin-right: .5em"
@@ -156,7 +167,8 @@
 
 
 <br />
-<button pButton type="button" icon="pi pi-plus" class="ui-button-info" [label]="'Add'" pAddRow [table]="dt"
-    [newRow]="newRow()"></button>
+<!-- <button pButton type="button" icon="pi pi-plus" class="ui-button-info" [label]="'Add'" pAddRowAAAA [table]="dt2222"
+    [newRow]="newRow()"></button> -->
+<input type="button" value="Add" (click)="newRow()">
 
 <p-messages [(value)]="msgs"></p-messages>

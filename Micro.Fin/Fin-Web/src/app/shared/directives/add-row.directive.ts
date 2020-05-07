@@ -2,7 +2,7 @@ import { Directive, Input, HostListener } from '@angular/core';
 import { Table } from 'primeng/table';
 
 @Directive({
-  selector: '[pAddRow]'
+  selector: '[pAddRowAAAA]'
 })
 export class AddRowDirective {
   @Input() table: Table;

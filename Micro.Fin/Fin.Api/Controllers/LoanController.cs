@@ -8,6 +8,7 @@ using Fin.ApplicationCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mapster;
 
 namespace Fin.Api.Controllers
 {
@@ -59,25 +60,26 @@ namespace Fin.Api.Controllers
         public async Task<ActionResult> GetLoanDetails(int loanId)
         {
             var loanDetails = await this._loanDetailRepository.FindAllAsync(x => x.LoanId == loanId);
-            var result = loanDetails.Select(x => new LoanDetailModel()
-            {
-                Id = x.Id,
-                LoanId = x.LoanId,
-                Month = x.Month,
-                MonthlyInterest = x.MonthlyInterest,
-                Paid = x.Paid,
-                LatePaid = x.LatePaid,
-                PaidDate = x.PaidDate,
-                CapitalPaid = x.CapitalPaid,
-                Balance = x.Balance,
-                InterestType = x.InterestType,
-                Installment = x.Installment,
-            }).ToList();
-
-            return Ok(loanDetails);
+            var result = loanDetails.Adapt<List<LoanDetailModel>>().OrderBy(x => x.Installment);
+            result.FirstOrDefault().Editing = true;
+            return Ok(result);
         }
 
-        
+        [HttpPut("loan-detail")]
+        public async Task<ActionResult> UpdateLoanDetail(LoanDetailModel loanDetailModel)
+        {
+            var result = await this._loanLoanService.UpdateLoanDetail(loanDetailModel);
+            return Ok(result);
+        }
+
+        [HttpPost("loan-detail")]
+        public async Task<ActionResult> CreatLoanDetail(LoanDetailModel loanDetailModel)
+        {
+            var result = await this._loanLoanService.CreateLoanDetail(loanDetailModel);
+            return Ok(result);
+        }
+
+
 
         // GET: api/Loan
         //[HttpGet]
