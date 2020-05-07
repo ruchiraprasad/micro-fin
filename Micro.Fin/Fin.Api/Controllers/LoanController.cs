@@ -59,9 +59,10 @@ namespace Fin.Api.Controllers
         [HttpGet("loan-details/{loanId}")]
         public async Task<ActionResult> GetLoanDetails(int loanId)
         {
-            var loanDetails = await this._loanDetailRepository.FindAllAsync(x => x.LoanId == loanId);
-            var result = loanDetails.Adapt<List<LoanDetailModel>>().OrderBy(x => x.Installment);
-            result.FirstOrDefault().Editing = true;
+            //var loanDetails = await this._loanDetailRepository.FindAllAsync(x => x.LoanId == loanId);
+            //var result = loanDetails.Adapt<List<LoanDetailModel>>().OrderBy(x => x.Installment);
+            //result.FirstOrDefault().Editing = true;
+            var result = await this._loanLoanService.GetLoanDetails(loanId);
             return Ok(result);
         }
 

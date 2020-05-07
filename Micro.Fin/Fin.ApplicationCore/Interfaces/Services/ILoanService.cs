@@ -12,5 +12,6 @@ namespace Fin.ApplicationCore.Interfaces.Services
         Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel);
         Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel);
         Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel);
+        Task<List<LoanDetailModel>> GetLoanDetails(int loanId);
     }
 }

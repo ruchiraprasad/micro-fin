@@ -20,9 +20,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<boolean>();
   loanDetails: any[] = [];
   clonedLoanDetails: { [s: string]: any; } = {};
-  
-  brands: SelectItem[];
-  clonedCars: { [s: string]: Car; } = {};
+  isEditMode = false;
 
   bsConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD.MM.YYYY', containerClass: 'theme-dark-blue datepicker-position',
@@ -40,6 +38,9 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroy$))
     .subscribe(loanId => {
       if(loanId){
+        this.isEditMode = true;
+        this.loanFormGroup.get('customerId').disable();
+        this.loanFormGroup.get('dateGranted').disable();
         console.log('getSelectedLoanAsObservable');
         this.homeService.getLoan(loanId)
         .pipe(
@@ -89,11 +90,21 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     
   }
 
+  newLoan(){
+    this.loanFormGroup.get('customerId').enable();
+    this.loanFormGroup.get('dateGranted').enable();
+    this.createLoanDetailForm();
+    this.loanDetails = [];
+    this.isEditMode = false;
+    
+    console.log('newLoan', this.loanFormGroup.value);
+  }
+
   onSubmit(){
     if (this.loanFormGroup.valid && this.loanFormGroup.dirty) {
       
       const formValues = Object.assign({}, this.loanFormGroup.value);
-      formValues.id = null;
+      //formValues.id = null;
       formValues.dateGranted = new Date(formValues.dateGranted);
       formValues.capitalOutstanding = formValues.initialLoanAmount;
       console.log('loanFormGroup', formValues);
@@ -107,6 +118,10 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         console.log('lonaDetails', data);
         this.loanDetails = data;
+        this.isEditMode = true;
+        this.loanFormGroup.get('customerId').disable();
+        this.loanFormGroup.get('dateGranted').disable();
+
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Loan created successfully', life: 2 });
       });
     }
@@ -152,7 +167,10 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     this.homeService.createLoanDetail(loanDetailModel)
     .pipe(takeUntil(this.destroy$))
     .subscribe((data : LoanDetailModel) => {
-      this.loanDetails.push(data);
+      //this.loanDetails.push(data);
+      this.homeService.getLoanDetails(data.loanId).subscribe(dd => {
+        this.loanDetails = dd;
+      })
     });
     
   }
@@ -174,11 +192,3 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
 }
 
-export interface Car {
-  vin?;
-  year?;
-  brand?;
-  color?;
-  price?;
-  saleDate?;
-}
