@@ -52,7 +52,7 @@ namespace Fin.ApplicationCore.Services
                 {
                     Loan = loan,
                     Installment = i,
-                    Month = loanCreateModel.DateGranted.AddMonths(i - 1),
+                    Month = loanCreateModel.DateGranted.AddMonths(i),
                     MonthlyInterest = loanCreateModel.CapitalOutstanding * loanCreateModel.Interest / 100,
                     Balance = loanCreateModel.CapitalOutstanding + totalInterest,
                     InterestType = InterestType.SimpleInterest,
@@ -127,9 +127,9 @@ namespace Fin.ApplicationCore.Services
             _existingLoanDetail.UpdatedBy = "ruchira";
             _existingLoanDetail.UpdatedOn = DateTime.Now;
 
-            if (loanDetailModel.InterestType == InterestType.SimpleInterest)
+            if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
             {
-                if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
+                if(loanDetailModel.InterestType == InterestType.SimpleInterest)
                 {
                     _existingLoan.UpdatedBy = "ruchira";
                     _existingLoan.UpdatedOn = DateTime.Now;
@@ -146,18 +146,29 @@ namespace Fin.ApplicationCore.Services
                         _existingLoan.CapitalOutstanding += _existingLoanDetail.CapitalPaid.Value;
                         _existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
                     }
+                    _existingLoanDetail.CapitalPaid = loanDetailModel.CapitalPaid;
                 }
+            }
 
-                _existingLoanDetail.CapitalPaid = loanDetailModel.CapitalPaid;
-
-                var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
-                var _previousBalance = _existingLoanDetail.Balance;
-                foreach (var _futureLoanDetail in _futureLoanDetails)
+            var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
+            var _previousBalance = _existingLoanDetail.Balance;
+            var _previousLoanDetail = _existingLoanDetail;
+            foreach (var _futureLoanDetail in _futureLoanDetails)
+            {
+                if(_existingLoanDetail.InterestType == InterestType.SimpleInterest && _existingLoanDetail.CapitalPaid != null)
                 {
                     _futureLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
                     _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
-                    _previousBalance = _futureLoanDetail.Balance;
+                    _futureLoanDetail.InterestType = InterestType.SimpleInterest;
                 }
+                else if (_futureLoanDetail.InterestType == InterestType.SimpleInterest && _previousLoanDetail.InterestType == InterestType.SimpleInterest)
+                {
+                    _futureLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
+                    _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
+                    _futureLoanDetail.InterestType = InterestType.SimpleInterest;
+                }
+                _previousBalance = _futureLoanDetail.Balance;
+                _previousLoanDetail = _futureLoanDetail;
             }
 
             var result = await this._loanRepository.UpdateAsyn(_existingLoan, loanDetailModel.LoanId);
@@ -174,8 +185,11 @@ namespace Fin.ApplicationCore.Services
                 LoanId = loanDetailModel.LoanId,
                 Installment = lastLoanDetail.Installment + 1,
                 Month = lastLoanDetail.Month.AddMonths(1),
-                MonthlyInterest = loan.CapitalOutstanding * loan.Interest / 100,
-                Balance = lastLoanDetail.Balance + loan.CapitalOutstanding * loan.Interest / 100,
+                MonthlyInterest = lastLoanDetail.InterestType == InterestType.CompoundInterest ? lastLoanDetail.Balance * loan.Interest / 100 :
+                    loan.CapitalOutstanding * loan.Interest / 100,
+                Balance = lastLoanDetail.InterestType == InterestType.CompoundInterest ?
+                    lastLoanDetail.Balance + lastLoanDetail.Balance * loan.Interest / 100 :
+                    loan.CapitalOutstanding + loan.CapitalOutstanding * loan.Interest / 100,
                 InterestType = InterestType.SimpleInterest,
                 CreatedBy = "ruchira",
                 CreatedOn = DateTime.Now
@@ -202,16 +216,30 @@ namespace Fin.ApplicationCore.Services
 
             var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
             var _balanceTakeForward = _existingLoan.CapitalOutstanding;
-            if(_existingLoan.LoanDetails.FirstOrDefault(x => x.Installment == _existingLoanDetail.Installment - 1) != null)
+
+            var _previousLoanDetail = _existingLoan.LoanDetails.FirstOrDefault(x => x.Installment == _existingLoanDetail.Installment - 1);
+            if (_previousLoanDetail != null)
             {
-                _balanceTakeForward = _existingLoan.LoanDetails.FirstOrDefault(x => x.Installment == _existingLoanDetail.Installment - 1).Balance;
+                if (_previousLoanDetail.InterestType == InterestType.CompoundInterest)
+                    _balanceTakeForward = _previousLoanDetail.Balance;
+                else
+                    _balanceTakeForward = _existingLoan.CapitalOutstanding;
             }
-            //var _balanceTakeForward = _existingLoanDetail.Balance - _existingLoanDetail.MonthlyInterest;
-            //if(_existingLoan.LoanDetails.Where(x => x.InterestType == InterestType.CompoundInterest) != null)
-            //{
-            //    _balanceTakeForward = _existingLoan.LoanDetails.Where(x => x.Installment < _existingLoanDetail.Installment && x.InterestType == InterestType.CompoundInterest)
-            //        .OrderByDescending(o => o.Installment).FirstOrDefault().Balance;
-            //}
+
+            if (interestType == InterestType.CompoundInterest)
+            {
+                _existingLoanDetail.MonthlyInterest = _balanceTakeForward * _existingLoan.Interest / 100;
+            }
+            else if(interestType == InterestType.SimpleInterest && _previousLoanDetail.InterestType == InterestType.CompoundInterest)
+            {
+                _existingLoanDetail.MonthlyInterest = _balanceTakeForward * _existingLoan.Interest / 100;
+            }
+            else
+            {
+                _existingLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
+            }
+
+            _existingLoanDetail.Balance = _existingLoan.CapitalOutstanding + _existingLoanDetail.MonthlyInterest;
 
             var _previousBalance = _existingLoanDetail.Balance;
             foreach (var _futureLoanDetail in _futureLoanDetails)

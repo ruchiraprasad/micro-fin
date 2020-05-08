@@ -38,22 +38,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroy$))
     .subscribe(loanId => {
       if(loanId){
-        this.isEditMode = true;
-        this.loanFormGroup.get('customerId').disable();
-        this.loanFormGroup.get('dateGranted').disable();
-        console.log('getSelectedLoanAsObservable');
-        this.homeService.getLoan(loanId)
-        .pipe(
-          switchMap(loan => {
-            console.log('Saved data', loan);
-            this.setLoanDetailFormValues(loan);
-            return this.homeService.getLoanDetails(loan.id);
-          }))
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(data => {
-          console.log('lonaDetails', data);
-          this.loanDetails = data;
-        });
+        this.getLoanAndLoanDetails(loanId);
       }
     });
   }
@@ -102,9 +87,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
   onSubmit(){
     if (this.loanFormGroup.valid && this.loanFormGroup.dirty) {
-      
       const formValues = Object.assign({}, this.loanFormGroup.value);
-      //formValues.id = null;
       formValues.dateGranted = new Date(formValues.dateGranted);
       formValues.capitalOutstanding = formValues.initialLoanAmount;
       console.log('loanFormGroup', formValues);
@@ -128,6 +111,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   }
 
   onRowEditInit(loanDetail: any) {
+    if(loanDetail.paidDate)
+      loanDetail.paidDate = new Date(loanDetail.paidDate)
     this.clonedLoanDetails[loanDetail.id] = { ...loanDetail };
   }
 
@@ -137,21 +122,16 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
       this.homeService.updateLoanDetail(loanDetail)
       .pipe(takeUntil(this.destroy$))
       .subscribe((data : LoanDetailModel) => {
-        console.log('onRowEditSave', loanDetail);
-        //loanDetail.balance = data.balance;
-        this.homeService.getLoanDetails(loanDetail.loanId).subscribe(dd => {
-          this.loanDetails = dd;
-        })
-        delete this.clonedLoanDetails[loanDetail.id];
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Car is updated', life: 2 });
+        if(data){
+          this.getLoanAndLoanDetails(data.loanId);
+          delete this.clonedLoanDetails[loanDetail.id];
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Loan Detail is updated', life: 2 });
+        }
       });
-      
     }
     else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Year is required' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Paid date is required' });
     }
-
-
   }
 
   onRowEditCancel(loanDetail: any, index: number) {
@@ -160,16 +140,13 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   }
 
   newRow() {
-    console.log('newRow');
-    
     const loanDetailModel = new LoanDetailModel();
     loanDetailModel.loanId = this.loanFormGroup.value.id;
     this.homeService.createLoanDetail(loanDetailModel)
     .pipe(takeUntil(this.destroy$))
     .subscribe((data : LoanDetailModel) => {
-      //this.loanDetails.push(data);
-      this.homeService.getLoanDetails(data.loanId).subscribe(dd => {
-        this.loanDetails = dd;
+      this.homeService.getLoanDetails(data.loanId).subscribe(loanDetails => {
+        this.loanDetails = loanDetails;
       })
     });
     
@@ -192,6 +169,23 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
       if(data){
         this.customers = data;
       }
+    });
+  }
+
+  private getLoanAndLoanDetails(loanId: number){
+    this.isEditMode = true;
+    this.loanFormGroup.get('customerId').disable();
+    this.loanFormGroup.get('dateGranted').disable();
+
+    this.homeService.getLoan(loanId)
+    .pipe(
+      switchMap(loan => {
+        this.setLoanDetailFormValues(loan);
+        return this.homeService.getLoanDetails(loan.id);
+      }))
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(data => {
+      this.loanDetails = data;
     });
   }
 
