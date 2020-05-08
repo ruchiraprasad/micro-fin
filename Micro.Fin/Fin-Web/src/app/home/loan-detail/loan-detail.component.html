@@ -21,16 +21,9 @@
                             <div class="col-sm form-group">
                                 <label class="form-control-label">Interest</label>
                                 <span class="form-control">
-                                    <input type="number" style="text-align:left;width: 90%;border: 0;" max="100"
+                                    <input type="number" style="text-align:left;width: 80%;border: 0;" max="100"
                                         accuracy="2" min="1" formControlName="interest" name="interest" [readonly]="isEditMode">%
                                 </span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm form-group">
-                                <label class="form-control-label">Initial Loan Amount</label>
-                                <input type="number" class="form-control" style="text-align:left;"
-                                    formControlName="initialLoanAmount" name="initialLoanAmount" [readonly]="isEditMode">
                             </div>
                             <div class="col-sm form-group">
                                 <label class="form-control-label">Date Granted</label>
@@ -47,14 +40,19 @@
                         </div>
                         <div class="row">
                             <div class="col-sm form-group">
-                                <label class="form-control-label">Period (M)</label>
+                                <label class="form-control-label">Initial Loan Amount</label>
                                 <input type="number" class="form-control" style="text-align:left;"
-                                    formControlName="periodMonths" name="periodMonths" [readonly]="isEditMode">
+                                    formControlName="initialLoanAmount" name="initialLoanAmount" [readonly]="isEditMode">
                             </div>
                             <div class="col-sm form-group">
                                 <label class="form-control-label">Capital Outstanding</label>
                                 <input type="number" class="form-control" style="text-align:left;"
                                     formControlName="capitalOutstanding" name="capitalOutstanding" readonly>
+                            </div>
+                            <div class="col-sm form-group">
+                                <label class="form-control-label">Period (M)</label>
+                                <input type="number" class="form-control" style="text-align:left;"
+                                    formControlName="periodMonths" name="periodMonths" [readonly]="isEditMode">
                             </div>
                         </div>
                         <div class="row">
@@ -99,7 +97,7 @@
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="number" [(ngModel)]="rowData.paid" style="width: 100%;">
+                                            <input pInputText type="number" [(ngModel)]="rowData.paid" style="width: 100%;" [disabled] = "rowData.latePaid" min="1">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.paid}}
@@ -109,7 +107,7 @@
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="number" [(ngModel)]="rowData.latePaid" style="width: 100%;">
+                                            <input pInputText type="number" [(ngModel)]="rowData.latePaid" style="width: 100%;" [disabled] = "rowData.paid">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.latePaid}}
