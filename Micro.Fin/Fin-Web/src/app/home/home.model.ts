@@ -35,6 +35,7 @@ export class LoanDetailModel{
     capitalPaid?: number;
     balance?: number;
     interestType?: InterestType;
+    isCompoundInterest?:boolean;
 }
 
 export enum InterestType{

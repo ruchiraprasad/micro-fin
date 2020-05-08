@@ -6,7 +6,7 @@ import { HomeService } from '../home.service';
 import { takeUntil, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
-import { LoanModel, LoanDetailModel } from '../home.model';
+import { LoanModel, LoanDetailModel, InterestType } from '../home.model';
 
 @Component({
   selector: 'app-loan-detail',
@@ -21,7 +21,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
   loanDetails: any[] = [];
   clonedLoanDetails: { [s: string]: any; } = {};
   isEditMode = false;
-
+ 
   bsConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD.MM.YYYY', containerClass: 'theme-dark-blue datepicker-position',
     customTodayClass: 'highlight-today', adaptivePosition: true, dateCustomClasses: [{ date: new Date(), classes: ['highlight-today'] }]
@@ -173,6 +173,16 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
       })
     });
     
+  }
+
+  toggleInterestType(loanDetailModel: LoanDetailModel){
+    console.log('toggleInterestType', loanDetailModel);
+    this.homeService.calculateInterest(loanDetailModel.loanId, loanDetailModel.id, loanDetailModel.isCompoundInterest ? InterestType.CompoundInterest : InterestType.SimpleInterest)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(data => {
+      console.log('Interest', data);
+      this.loanDetails = data;
+    })
   }
 
   private getCustomers(){

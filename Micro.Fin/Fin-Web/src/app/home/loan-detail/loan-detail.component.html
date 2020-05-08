@@ -79,6 +79,7 @@
                                 <th>Late Paid</th>
                                 <th>Paid Date</th>
                                 <th>Capital Paid</th>
+                                <th>Compound</th>
                                 <th>Balance</th>
                                 <th style="width:4em"></th>
                             </tr>
@@ -92,12 +93,12 @@
                                     {{rowData.month | date:'MMM d, y'}}
                                 </td>
                                 <td>
-                                    {{rowData.monthlyInterest}}
+                                    {{rowData.monthlyInterest | number: '1.0-0'}}
                                 </td>
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="number" [(ngModel)]="rowData.paid" style="width: 100%;" [disabled] = "rowData.latePaid" min="1">
+                                            <input pInputText type="number" [(ngModel)]="rowData.paid" style="width: 100%;" [disabled] = "rowData.isCompoundInterest || rowData.latePaid" min="1">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.paid}}
@@ -130,7 +131,7 @@
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="input">
-                                            <input pInputText type="number" [(ngModel)]="rowData.capitalPaid" style="width: 100%;">
+                                            <input pInputText type="number" [(ngModel)]="rowData.capitalPaid" style="width: 100%;" [disabled]="rowData.isCompoundInterest">
                                         </ng-template>
                                         <ng-template pTemplate="output">
                                             {{rowData.capitalPaid}}
@@ -138,7 +139,10 @@
                                     </p-cellEditor>
                                 </td>
                                 <td>
-                                    {{rowData.balance}}
+                                    <p-checkbox [(ngModel)]="rowData.isCompoundInterest" binary="true" (onChange)="toggleInterestType(rowData)" [disabled] = "rowData.paidDate"></p-checkbox>
+                                </td>
+                                <td>
+                                    {{rowData.balance | number: '1.0-0'}}
                                 </td>
                                 <td style="text-align:center">
                                     <button *ngIf="!editing && rowData.editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"

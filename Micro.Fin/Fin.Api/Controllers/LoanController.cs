@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using Fin.ApplicationCore.Entities.Enums;
 
 namespace Fin.Api.Controllers
 {
@@ -77,6 +78,13 @@ namespace Fin.Api.Controllers
         public async Task<ActionResult> CreatLoanDetail(LoanDetailModel loanDetailModel)
         {
             var result = await this._loanLoanService.CreateLoanDetail(loanDetailModel);
+            return Ok(result);
+        }
+
+        [HttpGet("calculate-interest/{loanId}/{loanDetailId}/{interestType}")]
+        public async Task<ActionResult> CalculateInterest(int loanId, int loanDetailId, InterestType interestType)
+        {
+            var result = await this._loanLoanService.CalculateInterest(loanId, loanDetailId, interestType);
             return Ok(result);
         }
 

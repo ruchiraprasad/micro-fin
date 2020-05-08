@@ -29,14 +29,15 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { AddRowDirective } from './shared/directives/add-row.directive';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
+import { MessagesModule}  from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule, BsDropdownModule, TypeaheadModule } from 'ngx-bootstrap';
 import { CustomerComponent } from './customer/customer.component';
 import { CustomerService } from './customer/customer.service';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { CustomerService } from './customer/customer.service';
     BsDatepickerModule.forRoot(), 
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DialogModule
+    DialogModule,
+    CheckboxModule
   ],
   entryComponents: [
     LoanListComponent,

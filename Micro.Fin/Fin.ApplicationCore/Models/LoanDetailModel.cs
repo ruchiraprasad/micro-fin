@@ -19,5 +19,6 @@ namespace Fin.ApplicationCore.Models
         public decimal Balance { get; set; }
         public InterestType InterestType { get; set; }
         public bool Editing { get; set; } = false;
+        public bool IsCompoundInterest { get; set; }
     }
 }

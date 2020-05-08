@@ -83,7 +83,8 @@ namespace Fin.ApplicationCore.Services
                 Balance = x.Balance,
                 InterestType = x.InterestType,
                 Installment = x.Installment,
-                CapitalPaid = x.CapitalPaid
+                CapitalPaid = x.CapitalPaid,
+                IsCompoundInterest = x.InterestType == InterestType.CompoundInterest ? true : false
             }).ToList();
 
             if(result.FirstOrDefault(x => x.PaidDate != null) != null)
@@ -107,115 +108,74 @@ namespace Fin.ApplicationCore.Services
         {
             var _existingLoan = this._loanRepository.GetAllIncluding(e => e.LoanDetails).Where(x => x.Id == loanDetailModel.LoanId).FirstOrDefault();
             var _existingLoanDetail = _existingLoan.LoanDetails.FirstOrDefault(x => x.Id == loanDetailModel.Id);
-            if (_existingLoanDetail.Paid == null)
+            if(loanDetailModel.InterestType == InterestType.SimpleInterest)
             {
-                _existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
+                if (_existingLoanDetail.Paid == null)
+                {
+                    _existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
+                }
+                else
+                {
+                    _existingLoanDetail.Balance += _existingLoanDetail.Paid.Value;
+                    _existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
+                }
             }
-            else
-            {
-                _existingLoanDetail.Balance += _existingLoanDetail.Paid.Value;
-                _existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
-            }
+            
             _existingLoanDetail.Paid = loanDetailModel.Paid;
             _existingLoanDetail.LatePaid = loanDetailModel.LatePaid;
             _existingLoanDetail.PaidDate = loanDetailModel.PaidDate;
             _existingLoanDetail.UpdatedBy = "ruchira";
             _existingLoanDetail.UpdatedOn = DateTime.Now;
 
-            if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
+            if (loanDetailModel.InterestType == InterestType.SimpleInterest)
             {
-                _existingLoan.UpdatedBy = "ruchira";
-                _existingLoan.UpdatedOn = DateTime.Now;
-                if (_existingLoanDetail.CapitalPaid == null)
+                if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
                 {
-                    _existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
-                    _existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
+                    _existingLoan.UpdatedBy = "ruchira";
+                    _existingLoan.UpdatedOn = DateTime.Now;
+                    if (_existingLoanDetail.CapitalPaid == null)
+                    {
+                        _existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
+                        _existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
+                    }
+                    else
+                    {
+                        _existingLoanDetail.Balance += _existingLoanDetail.CapitalPaid.Value;
+                        _existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
+
+                        _existingLoan.CapitalOutstanding += _existingLoanDetail.CapitalPaid.Value;
+                        _existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
+                    }
                 }
-                else
+
+                _existingLoanDetail.CapitalPaid = loanDetailModel.CapitalPaid;
+
+                var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
+                var _previousBalance = _existingLoanDetail.Balance;
+                foreach (var _futureLoanDetail in _futureLoanDetails)
                 {
-                    _existingLoanDetail.Balance += _existingLoanDetail.CapitalPaid.Value;
-                    _existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
-
-                    _existingLoan.CapitalOutstanding += _existingLoanDetail.CapitalPaid.Value;
-                    _existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
+                    _futureLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
+                    _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
+                    _previousBalance = _futureLoanDetail.Balance;
                 }
-            }
-
-            _existingLoanDetail.CapitalPaid = loanDetailModel.CapitalPaid;
-
-            var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
-            var _previousBalance = _existingLoanDetail.Balance;
-            foreach (var _futureLoanDetail in _futureLoanDetails)
-            {
-                _futureLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
-                _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
-                _previousBalance = _futureLoanDetail.Balance;
             }
 
             var result = await this._loanRepository.UpdateAsyn(_existingLoan, loanDetailModel.LoanId);
             loanDetailModel.Balance = _existingLoanDetail.Balance;
             return loanDetailModel;
-
-            //var existingLoanDetail = await this._loanDetailRepository.GetAsync(loanDetailModel.Id.Value);
-            //if (existingLoanDetail.Paid == null)
-            //{
-            //    existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
-            //}
-            //else
-            //{
-            //    existingLoanDetail.Balance += existingLoanDetail.Paid.Value;
-            //    existingLoanDetail.Balance -= loanDetailModel.Paid.Value;
-            //}
-            //existingLoanDetail.Paid = loanDetailModel.Paid;
-            //existingLoanDetail.LatePaid = loanDetailModel.LatePaid;
-            //existingLoanDetail.PaidDate = loanDetailModel.PaidDate;
-
-
-            //existingLoanDetail.UpdatedBy = "ruchira";
-            //existingLoanDetail.UpdatedOn = DateTime.Now;
-
-            //    if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
-            //{
-            //    var existingLoan = await this._loanRepository.GetAsync(loanDetailModel.LoanId);
-            //    existingLoan.UpdatedBy = "ruchira";
-            //    existingLoan.UpdatedOn = DateTime.Now;
-
-            //    if(existingLoanDetail.CapitalPaid == null)
-            //    {
-            //        existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
-            //        existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
-            //    }
-            //    else
-            //    {
-            //        existingLoanDetail.Balance += existingLoanDetail.CapitalPaid.Value;
-            //        existingLoanDetail.Balance -= loanDetailModel.CapitalPaid.Value;
-
-            //        existingLoan.CapitalOutstanding += existingLoanDetail.CapitalPaid.Value;
-            //        existingLoan.CapitalOutstanding -= loanDetailModel.CapitalPaid.Value;
-            //    }
-
-            //    existingLoanDetail.Loan = existingLoan;
-            //}
-
-            //existingLoanDetail.CapitalPaid = loanDetailModel.CapitalPaid;
-
-            //var result = await this._loanDetailRepository.UpdateAsyn(existingLoanDetail, loanDetailModel.Id);
-
-            //loanDetailModel.Balance = existingLoanDetail.Balance;
-            //return loanDetailModel;
         }
 
         public async Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel)
         {
             var loan = await this._loanRepository.GetAsync(loanDetailModel.LoanId);
-            var latsLoanDetail = await this._loanDetailRepository.FindLastLoanDetail(loanDetailModel.LoanId);
+            var lastLoanDetail = await this._loanDetailRepository.FindLastLoanDetail(loanDetailModel.LoanId);
             var loanDetail = new LoanDetail()
             {
                 LoanId = loanDetailModel.LoanId,
-                Installment = latsLoanDetail.Installment + 1,
-                Month = latsLoanDetail.Month.AddMonths(1),
+                Installment = lastLoanDetail.Installment + 1,
+                Month = lastLoanDetail.Month.AddMonths(1),
                 MonthlyInterest = loan.CapitalOutstanding * loan.Interest / 100,
-                Balance = latsLoanDetail.Balance + loan.CapitalOutstanding * loan.Interest / 100,
+                Balance = lastLoanDetail.Balance + loan.CapitalOutstanding * loan.Interest / 100,
                 InterestType = InterestType.SimpleInterest,
                 CreatedBy = "ruchira",
                 CreatedOn = DateTime.Now
@@ -230,6 +190,51 @@ namespace Fin.ApplicationCore.Services
             loanDetailModel.InterestType = result.InterestType;
 
             return loanDetailModel;
+        }
+
+        public async Task<List<LoanDetailModel>> CalculateInterest(int loanId, int loanDetailId, InterestType interestType)
+        {
+            var _existingLoan = this._loanRepository.GetAllIncluding(e => e.LoanDetails).Where(x => x.Id == loanId).FirstOrDefault();
+            var _existingLoanDetail = _existingLoan.LoanDetails.FirstOrDefault(x => x.Id == loanDetailId);
+            _existingLoanDetail.InterestType = interestType;
+            _existingLoanDetail.UpdatedBy = "ruchira";
+            _existingLoanDetail.UpdatedOn = DateTime.Now;
+
+            var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
+            var _balanceTakeForward = _existingLoan.CapitalOutstanding;
+            if(_existingLoan.LoanDetails.FirstOrDefault(x => x.Installment == _existingLoanDetail.Installment - 1) != null)
+            {
+                _balanceTakeForward = _existingLoan.LoanDetails.FirstOrDefault(x => x.Installment == _existingLoanDetail.Installment - 1).Balance;
+            }
+            //var _balanceTakeForward = _existingLoanDetail.Balance - _existingLoanDetail.MonthlyInterest;
+            //if(_existingLoan.LoanDetails.Where(x => x.InterestType == InterestType.CompoundInterest) != null)
+            //{
+            //    _balanceTakeForward = _existingLoan.LoanDetails.Where(x => x.Installment < _existingLoanDetail.Installment && x.InterestType == InterestType.CompoundInterest)
+            //        .OrderByDescending(o => o.Installment).FirstOrDefault().Balance;
+            //}
+
+            var _previousBalance = _existingLoanDetail.Balance;
+            foreach (var _futureLoanDetail in _futureLoanDetails)
+            {
+                if(interestType == InterestType.CompoundInterest)
+                {
+                    _futureLoanDetail.MonthlyInterest = _previousBalance * _existingLoan.Interest / 100;
+                }
+                else
+                {
+                    _futureLoanDetail.MonthlyInterest = _existingLoan.CapitalOutstanding * _existingLoan.Interest / 100;
+                }
+                
+                _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
+                _futureLoanDetail.InterestType = interestType;
+                _futureLoanDetail.UpdatedBy = "ruchira";
+                _futureLoanDetail.UpdatedOn = DateTime.Now;
+
+                _previousBalance = _futureLoanDetail.Balance;
+            }
+
+            var result = await this._loanRepository.UpdateAsyn(_existingLoan, loanId);
+            return await this.GetLoanDetails(loanId);
         }
     }
 }
