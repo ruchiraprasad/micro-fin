@@ -1,10 +1,12 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 left-panel">
+        <div class="col-sm left-panel">
             <ng-template #panelleft>
             </ng-template>
         </div>
-        <div class="col-sm-6 right-panel">
+        <div class="col-sm right-panel d-flex flex-column">
+            <div class="collapse-btn round" (click)="toggleRightPanel($event);"
+                tooltip="Click here to expand the view" placement="left"></div>
             <ng-template #panelright>
             </ng-template>
         </div>
