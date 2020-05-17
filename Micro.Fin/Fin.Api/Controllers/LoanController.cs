@@ -16,13 +16,13 @@ namespace Fin.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LoanController : ControllerBase
+    public class LoanController : BaseController
     {
         private readonly ILoanRepository _loanRepository;
         private readonly ILoanDetailRepository _loanDetailRepository;
         private readonly ILoanService _loanLoanService;
 
-        public LoanController(ILoanRepository loanRepository, ILoanService loanService, ILoanDetailRepository loanDetailRepository)
+        public LoanController(IHttpContextAccessor httpContextAccessor, ILoanRepository loanRepository, ILoanService loanService, ILoanDetailRepository loanDetailRepository) : base(httpContextAccessor)
         {
             this._loanRepository = loanRepository;
             this._loanLoanService = loanService;
@@ -42,7 +42,7 @@ namespace Fin.Api.Controllers
         {
             if(loanCreateModel != null)
             {
-                var result = await this._loanLoanService.CreateLoan(loanCreateModel);
+                var result = await this._loanLoanService.CreateLoan(loanCreateModel, this.Username);
                 return Ok(result);
             }
 
@@ -70,21 +70,22 @@ namespace Fin.Api.Controllers
         [HttpPut("loan-detail")]
         public async Task<ActionResult> UpdateLoanDetail(LoanDetailModel loanDetailModel)
         {
-            var result = await this._loanLoanService.UpdateLoanDetail(loanDetailModel);
+            var result = await this._loanLoanService.UpdateLoanDetail(loanDetailModel, this.Username);
             return Ok(result);
         }
 
         [HttpPost("loan-detail")]
         public async Task<ActionResult> CreatLoanDetail(LoanDetailModel loanDetailModel)
         {
-            var result = await this._loanLoanService.CreateLoanDetail(loanDetailModel);
+            
+            var result = await this._loanLoanService.CreateLoanDetail(loanDetailModel, this.Username);
             return Ok(result);
         }
 
         [HttpGet("calculate-interest/{loanId}/{loanDetailId}/{interestType}")]
         public async Task<ActionResult> CalculateInterest(int loanId, int loanDetailId, InterestType interestType)
         {
-            var result = await this._loanLoanService.CalculateInterest(loanId, loanDetailId, interestType);
+            var result = await this._loanLoanService.CalculateInterest(loanId, loanDetailId, interestType, this.Username);
             return Ok(result);
         }
 

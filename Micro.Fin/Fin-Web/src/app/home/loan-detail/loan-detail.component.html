@@ -3,7 +3,7 @@
         <div class="justify-content-center">
             <div class="">
                 <div class="row">
-                    <div class="col-sm"><h3>Loan Details</h3></div>
+                    <div class="col-md"><h4>{{isEditMode ? "Let's update loan details" : "Let's create new loan"}}</h4></div>
                     <div class="col-sm"><input type="button" value="New Loan" class="btn float-right create_new_btn" (click)="newLoan()"/></div>
                 </div>
                 <div class="">
@@ -168,6 +168,7 @@
 <br />
 <!-- <button pButton type="button" icon="pi pi-plus" class="ui-button-info" [label]="'Add'" pAddRowAAAA [table]="dt2222"
     [newRow]="newRow()"></button> -->
-<input type="button" value="Add" (click)="newRow()">
+<!-- <input type="button" icon="pi pi-plus" value="Add" (click)="newRow()"> -->
+<button pButton type="button" icon="pi pi-plus" label="Add" (click)="newRow()"></button>
 
 <p-messages [(value)]="msgs"></p-messages>

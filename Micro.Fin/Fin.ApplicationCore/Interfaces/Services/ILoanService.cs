@@ -10,10 +10,10 @@ namespace Fin.ApplicationCore.Interfaces.Services
     public interface ILoanService
     {
         Task<List<LoanModel>> FindLoans(int skip, int take, string searchText);
-        Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel);
-        Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel);
-        Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel);
+        Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel, string username);
+        Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel, string username);
+        Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel, string username);
         Task<List<LoanDetailModel>> GetLoanDetails(int loanId);
-        Task<List<LoanDetailModel>> CalculateInterest(int loanId, int loanDetailId, InterestType interestType);
+        Task<List<LoanDetailModel>> CalculateInterest(int loanId, int loanDetailId, InterestType interestType, string username);
     }
 }

@@ -10,3 +10,7 @@
 /Micro.Fin/Fin.Api/obj
 /Micro.Fin/Fin.ApplicationCore/bin/Debug/netcoreapp3.0
 /Micro.Fin/Fin.ApplicationCore/obj
+/Micro.Fin/Fin.ApplicationCore/bin/Release/netcoreapp3.0
+/Micro.Fin/Fin.Infrastructure/bin/Release/netcoreapp3.0
+/Micro.Fin/Fin.Api/Properties/PublishProfiles
+/Micro.Fin/Fin.Api/bin/Release/netcoreapp3.0

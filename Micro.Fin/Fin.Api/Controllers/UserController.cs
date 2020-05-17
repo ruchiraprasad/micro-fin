@@ -19,13 +19,13 @@ namespace Fin.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
         private readonly AppSettings _appSettings;
 
-        public UserController(IOptions<AppSettings> appSettings, IUserRepository userRepository, IUserService userService)
+        public UserController(IHttpContextAccessor httpContextAccessor, IOptions<AppSettings> appSettings, IUserRepository userRepository, IUserService userService) : base(httpContextAccessor)
         {
             this._appSettings = appSettings.Value;
             this._userRepository = userRepository;
@@ -53,7 +53,8 @@ namespace Fin.Api.Controllers
             var tokeOptions = new JwtSecurityToken(
                 issuer: "http://localhost:5000",
                 audience: "http://localhost:5000",
-                claims: new List<Claim>() { new Claim(JwtRegisteredClaimNames.GivenName, loginModel.UserName) },
+                claims: new List<Claim>() { new Claim(JwtRegisteredClaimNames.GivenName, loginModel.UserName),
+                                            new Claim("username", loginModel.UserName)},
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: signinCredentials
             );

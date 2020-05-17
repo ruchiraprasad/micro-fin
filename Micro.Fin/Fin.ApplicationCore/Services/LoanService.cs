@@ -26,7 +26,7 @@ namespace Fin.ApplicationCore.Services
             //return await Task.Run(() => loans.OrderBy(x => x.CustomerId).Skip(skip).Take(take).ToList());
         }
 
-        public async Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel)
+        public async Task<LoanCreateModel> CreateLoan(LoanCreateModel loanCreateModel, string username)
         {
             var loan = new Loan()
             {
@@ -39,7 +39,7 @@ namespace Fin.ApplicationCore.Services
                 PropertyValue = loanCreateModel.PropertyValue != null ? loanCreateModel.PropertyValue.Value : 0,
                 CapitalOutstanding = loanCreateModel.CapitalOutstanding,
 
-                CreatedBy = "ruchira",
+                CreatedBy = username,
                 CreatedOn = DateTime.Now
             };
 
@@ -56,7 +56,7 @@ namespace Fin.ApplicationCore.Services
                     MonthlyInterest = loanCreateModel.CapitalOutstanding * loanCreateModel.Interest / 100,
                     Balance = loanCreateModel.CapitalOutstanding + totalInterest,
                     InterestType = InterestType.SimpleInterest,
-                    CreatedBy = "ruchira",
+                    CreatedBy = username,
                     CreatedOn = DateTime.Now
                 };
 
@@ -104,7 +104,7 @@ namespace Fin.ApplicationCore.Services
             return result;
         }
 
-        public async Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel)
+        public async Task<LoanDetailModel> UpdateLoanDetail(LoanDetailModel loanDetailModel, string username)
         {
             var _existingLoan = this._loanRepository.GetAllIncluding(e => e.LoanDetails).Where(x => x.Id == loanDetailModel.LoanId).FirstOrDefault();
             var _existingLoanDetail = _existingLoan.LoanDetails.FirstOrDefault(x => x.Id == loanDetailModel.Id);
@@ -124,14 +124,14 @@ namespace Fin.ApplicationCore.Services
             _existingLoanDetail.Paid = loanDetailModel.Paid;
             _existingLoanDetail.LatePaid = loanDetailModel.LatePaid;
             _existingLoanDetail.PaidDate = loanDetailModel.PaidDate;
-            _existingLoanDetail.UpdatedBy = "ruchira";
+            _existingLoanDetail.UpdatedBy = username;
             _existingLoanDetail.UpdatedOn = DateTime.Now;
 
             if (loanDetailModel.CapitalPaid != null && loanDetailModel.CapitalPaid > 0)
             {
                 if(loanDetailModel.InterestType == InterestType.SimpleInterest)
                 {
-                    _existingLoan.UpdatedBy = "ruchira";
+                    _existingLoan.UpdatedBy = username;
                     _existingLoan.UpdatedOn = DateTime.Now;
                     if (_existingLoanDetail.CapitalPaid == null)
                     {
@@ -176,7 +176,7 @@ namespace Fin.ApplicationCore.Services
             return loanDetailModel;
         }
 
-        public async Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel)
+        public async Task<LoanDetailModel> CreateLoanDetail(LoanDetailModel loanDetailModel, string username)
         {
             var loan = await this._loanRepository.GetAsync(loanDetailModel.LoanId);
             var lastLoanDetail = await this._loanDetailRepository.FindLastLoanDetail(loanDetailModel.LoanId);
@@ -191,7 +191,7 @@ namespace Fin.ApplicationCore.Services
                     lastLoanDetail.Balance + lastLoanDetail.Balance * loan.Interest / 100 :
                     loan.CapitalOutstanding + loan.CapitalOutstanding * loan.Interest / 100,
                 InterestType = InterestType.SimpleInterest,
-                CreatedBy = "ruchira",
+                CreatedBy = username,
                 CreatedOn = DateTime.Now
             };
 
@@ -206,12 +206,12 @@ namespace Fin.ApplicationCore.Services
             return loanDetailModel;
         }
 
-        public async Task<List<LoanDetailModel>> CalculateInterest(int loanId, int loanDetailId, InterestType interestType)
+        public async Task<List<LoanDetailModel>> CalculateInterest(int loanId, int loanDetailId, InterestType interestType, string username)
         {
             var _existingLoan = this._loanRepository.GetAllIncluding(e => e.LoanDetails).Where(x => x.Id == loanId).FirstOrDefault();
             var _existingLoanDetail = _existingLoan.LoanDetails.FirstOrDefault(x => x.Id == loanDetailId);
             _existingLoanDetail.InterestType = interestType;
-            _existingLoanDetail.UpdatedBy = "ruchira";
+            _existingLoanDetail.UpdatedBy = username;
             _existingLoanDetail.UpdatedOn = DateTime.Now;
 
             var _futureLoanDetails = _existingLoan.LoanDetails.Where(x => x.Installment > _existingLoanDetail.Installment).OrderBy(o => o.Installment);
@@ -255,7 +255,7 @@ namespace Fin.ApplicationCore.Services
                 
                 _futureLoanDetail.Balance = _previousBalance + _futureLoanDetail.MonthlyInterest;
                 _futureLoanDetail.InterestType = interestType;
-                _futureLoanDetail.UpdatedBy = "ruchira";
+                _futureLoanDetail.UpdatedBy = username;
                 _futureLoanDetail.UpdatedOn = DateTime.Now;
 
                 _previousBalance = _futureLoanDetail.Balance;
